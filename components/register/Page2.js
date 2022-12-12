@@ -1,7 +1,6 @@
-import FormInput from '../FormInput'
+import FormInput from "../FormInput"
 
-
-const Page1 = (props) => {
+const Page2 = (props) => {
     const { inputs } = props
     return (
         <>
@@ -14,4 +13,4 @@ const Page1 = (props) => {
     )
 }
 
-export default Page1
+export default Page2
