@@ -37,9 +37,11 @@ function Login(props) {
     return (
         <>
             <div className="main-bg font-inter h-screen flex justify-center items-center">
-                <div className="bg-orangeBg h-screen w-full fixed top-0 z-[-1]">
+                <div className="bg-orangeBg h-screen w-full fixed top-0 z-[-2]">
                     <Image src="/cvsu.png" alt="CvSU" fill></Image>
                 </div>
+
+                <div className="bg-white h-screen w-full fixed top-0 z-[-1] lg:hidden"></div>
 
                 <div className="bg-white h-screen w-full p-0 mt-0 lg:h-[90%] lg:min-h-[550px] lg:max-h-[650px] lg:w-[90%] lg:max-w-[1000px] lg:flex mx-auto lg:rounded-3xl">
                     <div className="overflow-hidden lg:hidden">
