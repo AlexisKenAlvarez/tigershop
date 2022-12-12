@@ -16,7 +16,8 @@ module.exports = {
         greenBg: '#073F1A',
         inputBg: '#e2f3e7',
         greenHover: '#366345',
-        greenButton: '#1B4E2C'
+        greenButton: '#1B4E2C',
+        greenSteps: '#023815'
       }
     },
   },
