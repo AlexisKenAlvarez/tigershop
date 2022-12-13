@@ -3,20 +3,20 @@ import FormInputSmall from '../FormInputSmall'
 import FormInputShort from '../FormInputShort'
 
 const Page3 = (props) => {
-    const { inputsHalf, inputsFull } = props
+    const { inputsHalf, inputsFull, value, onChange } = props
     return (
         <>
             <div className='flex gap-x-6'>
-                {inputsHalf.map((value) => {
+                {inputsHalf.map((val) => {
                     return (
-                        <FormInputShort key="value.id" {...value}/>
+                        <FormInputShort key={val.id} {...val} value={value[val.name]} onChange={onChange} />
                     )
                 })}
             </div>
 
-            {inputsFull.map((value) => {
+            {inputsFull.map((val) => {
                 return (
-                    <FormInputSmall key={value.id} {...value}/> 
+                    <FormInputSmall key={val.id} {...val} value={value[val.name]} onChange={onChange} /> 
                 )
             })}
 

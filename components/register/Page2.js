@@ -1,12 +1,12 @@
 import FormInput from "../FormInput"
 
 const Page2 = (props) => {
-    const { inputs } = props
+    const { inputs, onChange, value } = props
     return (
         <>
-            {inputs.map((value) => {
+            {inputs.map((val) => {
                 return (
-                    <FormInput key={value.id} {...value} />
+                    <FormInput key={val.id} {...val} value={value[val.name]} onChange={onChange} />
                 )
             })}
         </>

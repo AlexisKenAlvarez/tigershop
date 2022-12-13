@@ -9,6 +9,7 @@ import Page2 from "../components/register/Page2"
 import Page3 from "../components/register/Page3"
 import LongButton from "../components/LongButton"
 
+
 export async function getServerSideProps() {
 
     const inputs = [
@@ -34,19 +35,19 @@ export async function getServerSideProps() {
 
     const page2inputs = [
         {
-            id: '1',
+            id: 1,
             name: 'facebook',
-            label: 'facebook link',
+            label: 'facebook link: (Optional)',
             type: 'text'
         },
         {
-            id: '2',
+            id: 2,
             name: 'phone',
             label: 'phone number',
             type: 'text'
         },
         {
-            id: '2',
+            id: 3,
             name: 'studentno',
             label: 'student number',
             type: 'text'
@@ -55,12 +56,12 @@ export async function getServerSideProps() {
 
     const page3half = [
         {
-            id: '1',
+            id: 1,
             name: 'course',
             label: 'course',
             text: 'text'
         }, {
-            id: '2',
+            id: 2,
             name: 'yearsection',
             label: 'Year and Section',
             text: 'text'
@@ -69,13 +70,13 @@ export async function getServerSideProps() {
 
     const page3full = [
         {
-            id: '1',
+            id: 1,
             name: 'password',
             label: 'password',
             text: 'password'
         },
         {
-            id: '2',
+            id: 2,
             name: 'confirmpassword',
             label: 'confirm password',
             text: 'password'
@@ -95,7 +96,8 @@ export async function getServerSideProps() {
 function Signup(props) {
     const [values, setValues] = useState({
         email: '',
-        password: '',
+        username: '',
+        fullname: '',
         facebook: '',
         phone: '',
         studentno: '',
@@ -103,6 +105,12 @@ function Signup(props) {
         yearsection: '',
         password: '',
         confirmpassword: ''
+    })
+
+    const [firstCheck, setFirst] = useState({
+        check1: false,
+        check2: false,
+        check3: false
     })
 
     const [page, setPage] = useState(1)
@@ -115,7 +123,56 @@ function Signup(props) {
 
     const handleNextPage = () => {
         if (page < 3) {
-            setPage(current => current + 1)
+            if (page === 1) {
+                if (!(onlyLettersAndNumbers(values.fullname))) {
+                    console.log("invalid")
+                    setFirst(current => ({...current, check1: false}))
+
+                } else if (values.fullname === '') {
+                    console.log("cannot be empty")
+                    setFirst(current => ({...current, check1: false}))
+
+                } else if (values.fullname.length <= 3) {
+                    console.log("username too short")
+                    setFirst(current => ({...current, check1: false}))
+
+                } else if (values.fullname.length >= 60) {
+                    console.log("username too long")
+                    setFirst(current => ({...current, check1: false}))
+
+                } else {
+                    setFirst(current => ({...current, check1: true}))
+                }
+
+                if (checkSpecialChar(values.username)) {
+                    console.log("username cannot contain special char")
+                    setFirst(current => ({...current, check2: false}))
+                } else if (!(usernameLength(values.username))) {
+                    console.log("must be 3 to 10 chars")
+                    setFirst(current => ({...current, check2: false}))
+
+                } else if (hasSpace(values.username)) {
+                    console.log("username cannot contain white space")
+                    setFirst(current => ({...current, check2: false}))
+
+                } else if (!(hasLetter(values.username))) {
+                    console.log("must have atleast 1 letter")
+                    setFirst(current => ({...current, check2: false}))
+
+                } else {
+                    setFirst(current => ({...current, check2: true}))
+                }
+
+                if (validateEmail(values.email)) {
+                    setFirst(current => ({...current, check3: true}))
+                } else {
+                    setFirst(current => ({...current, check3: false}))
+                }
+
+                if (firstCheck.check1 && firstCheck.check2 && firstCheck.check3) {
+                    nextPage()
+                }
+            }
         }
     }
 
@@ -123,6 +180,48 @@ function Signup(props) {
         if (page === 2) {
             setPage(current => current - 1)
         }
+    }
+
+    const handleChange = (e) => {
+        setValues(values => ({ ...values, [e.target.name]: e.target.value }))
+    }
+
+    function validateEmail(email) { 
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(re.test(email)){
+            //Email valid. Procees to test if it's from the right domain (Second argument is to check that the string ENDS with this domain, and that it doesn't just contain it)
+            if(email.indexOf("@cvsu.edu.ph", email.length - "@cvsu.edu.ph".length) !== -1){
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+
+    function hasSpace(str) {
+        return /\s/.test(str)
+    }
+
+    function checkSpecialChar(str) {
+        return /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(str)
+    }
+
+    function usernameLength(str) {
+        return /^[a-zA-Z0-9\s]{3,10}$/.test(str)
+    }
+
+    function hasLetter(str) {
+        return /[a-zA-Z]+/.test(str)
+    }
+
+    function onlyLettersAndNumbers(str) {
+        return /^[A-Za-z]*$/.test(str);
+    }
+
+    const nextPage = () => {
+        setPage(current => current + 1)
     }
 
 
@@ -156,9 +255,9 @@ function Signup(props) {
                                 </div>
                             </div>
                             <p className="text-sm text-center text-greenSteps font-medium mt-4">Student Information</p>
-                            {page === 1 ? <Page1 inputs={props.inputs} /> :
-                                page === 2 ? <Page2 inputs={props.page2inputs} /> :
-                                    page === 3 ? <Page3 inputsFull={props.page3full} inputsHalf={props.page3half} /> : null}
+                            {page === 1 ? <Page1 inputs={props.inputs} onChange={handleChange} value={values} /> :
+                                page === 2 ? <Page2 inputs={props.page2inputs} onChange={handleChange} value={values} /> :
+                                    page === 3 ? <Page3 inputsFull={props.page3full} inputsHalf={props.page3half} onChange={handleChange} value={values} /> : null}
 
                             {page === 3 ?
                                 <div className="flex gap-x-4 mt-6">
@@ -171,8 +270,6 @@ function Signup(props) {
                                 {page === 2 ? <ShortButton name="Back" className="mr-auto" onClick={handleBackPage} /> : null}
                                 {page < 3 ? <ShortButton name="Next" className="ml-auto" onClick={handleNextPage} /> : <LongButton name="Create my account" />}
                             </div>
-
-
 
                         </div>
                     </div>
