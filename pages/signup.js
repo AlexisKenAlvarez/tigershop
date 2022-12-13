@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import AuthNavMobile from "../components/AuthNavMobile"
 import AuthSide from "../components/AuthSide"
@@ -113,6 +113,11 @@ function Signup(props) {
         check3: false
     })
 
+    const [page1go, set1go] = useState(false)
+    const [page2go, set2go] = useState(false)
+    const [page3go, set3go] = useState(false)
+
+
     const [page, setPage] = useState(1)
     const router = useRouter()
 
@@ -124,57 +129,79 @@ function Signup(props) {
     const handleNextPage = () => {
         if (page < 3) {
             if (page === 1) {
-                if (!(onlyLettersAndNumbers(values.fullname))) {
-                    console.log("invalid")
-                    setFirst(current => ({...current, check1: false}))
 
-                } else if (values.fullname === '') {
-                    console.log("cannot be empty")
-                    setFirst(current => ({...current, check1: false}))
+                if (values.fullname === '') {
+                    console.log("fullname cannot be empty")
+                    setFirst(current => ({ ...current, check1: false }))
+
+                } else if (!(onlyLettersAndNumbers(values.fullname))) {
+                    console.log("invalid")
+                    setFirst(current => ({ ...current, check1: false }))
 
                 } else if (values.fullname.length <= 3) {
                     console.log("username too short")
-                    setFirst(current => ({...current, check1: false}))
+                    setFirst(current => ({ ...current, check1: false }))
 
                 } else if (values.fullname.length >= 60) {
                     console.log("username too long")
-                    setFirst(current => ({...current, check1: false}))
+                    setFirst(current => ({ ...current, check1: false }))
 
                 } else {
-                    setFirst(current => ({...current, check1: true}))
+                    setFirst(current => ({ ...current, check1: true }))
                 }
 
-                if (checkSpecialChar(values.username)) {
+                if (values.username === '') {
+                    console.log("username cannot be empty")
+                    setFirst(current => ({ ...current, check2: false }))
+                }
+                else if (checkSpecialChar(values.username)) {
                     console.log("username cannot contain special char")
-                    setFirst(current => ({...current, check2: false}))
+                    setFirst(current => ({ ...current, check2: false }))
                 } else if (!(usernameLength(values.username))) {
                     console.log("must be 3 to 10 chars")
-                    setFirst(current => ({...current, check2: false}))
+                    setFirst(current => ({ ...current, check2: false }))
 
                 } else if (hasSpace(values.username)) {
                     console.log("username cannot contain white space")
-                    setFirst(current => ({...current, check2: false}))
+                    setFirst(current => ({ ...current, check2: false }))
 
                 } else if (!(hasLetter(values.username))) {
                     console.log("must have atleast 1 letter")
-                    setFirst(current => ({...current, check2: false}))
+                    setFirst(current => ({ ...current, check2: false }))
 
                 } else {
-                    setFirst(current => ({...current, check2: true}))
+                    setFirst(current => ({ ...current, check2: true }))
                 }
 
-                if (validateEmail(values.email)) {
-                    setFirst(current => ({...current, check3: true}))
+                if (values.email === '') {
+
+                    console.log("Email cannot be empty")
+                    setFirst(current => ({ ...current, check3: false }))
+                } else if (validateEmail(values.email)) {
+
+                    setFirst(current => ({ ...current, check3: true }))
                 } else {
-                    setFirst(current => ({...current, check3: false}))
+                    console.log("inValid email")
+
+                    setFirst(current => ({ ...current, check3: false }))
                 }
 
-                if (firstCheck.check1 && firstCheck.check2 && firstCheck.check3) {
-                    nextPage()
-                }
+                set1go(current => !current)
+
+            } else if (page === 2) {
+                
             }
         }
     }
+
+    useEffect(() => {
+        if (firstCheck.check1 && firstCheck.check2 && firstCheck.check3) {
+            nextPage()
+        }
+    }, [page1go])
+
+    
+
 
     const handleBackPage = () => {
         if (page === 2) {
@@ -186,11 +213,11 @@ function Signup(props) {
         setValues(values => ({ ...values, [e.target.name]: e.target.value }))
     }
 
-    function validateEmail(email) { 
+    function validateEmail(email) {
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if(re.test(email)){
+        if (re.test(email)) {
             //Email valid. Procees to test if it's from the right domain (Second argument is to check that the string ENDS with this domain, and that it doesn't just contain it)
-            if(email.indexOf("@cvsu.edu.ph", email.length - "@cvsu.edu.ph".length) !== -1){
+            if (email.indexOf("@cvsu.edu.ph", email.length - "@cvsu.edu.ph".length) !== -1) {
                 return true
             } else {
                 return false
