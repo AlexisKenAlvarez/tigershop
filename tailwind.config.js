@@ -17,7 +17,8 @@ module.exports = {
         inputBg: '#e2f3e7',
         greenHover: '#366345',
         greenButton: '#1B4E2C',
-        greenSteps: '#023815'
+        greenSteps: '#023815',
+        redError: '#C3252E'
       }
     },
   },

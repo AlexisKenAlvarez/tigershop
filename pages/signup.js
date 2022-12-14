@@ -37,19 +37,20 @@ export async function getServerSideProps() {
         {
             id: 1,
             name: 'facebook',
-            label: 'facebook link: (Optional)',
+            label: 'Facebook link',
+            placeholder: "(Optional)",
             type: 'text'
         },
         {
             id: 2,
             name: 'phone',
-            label: 'phone number',
+            label: 'phone no',
             type: 'text'
         },
         {
             id: 3,
             name: 'studentno',
-            label: 'student number',
+            label: 'student No',
             type: 'text'
         }
     ]
@@ -63,7 +64,7 @@ export async function getServerSideProps() {
         }, {
             id: 2,
             name: 'yearsection',
-            label: 'Year and Section',
+            label: 'Yr and Section',
             type: 'text'
         },
     ]
@@ -95,6 +96,19 @@ export async function getServerSideProps() {
 
 function Signup(props) {
     const [values, setValues] = useState({
+        email: '',
+        username: '',
+        fullname: '',
+        facebook: '',
+        phone: '',
+        studentno: '',
+        course: '',
+        yearsection: '',
+        password: '',
+        confirmpassword: ''
+    })
+
+    const [valuesError, setError] = useState({
         email: '',
         username: '',
         fullname: '',
@@ -144,58 +158,58 @@ function Signup(props) {
         if (page === 1) {
 
             if (values.fullname === '') {
-                console.log("fullname cannot be empty")
+                setError(current => ({ ...current, fullname: "Cannot be empty" }))
                 setFirst(current => ({ ...current, check1: false }))
 
             } else if (!(onlyLettersAndNumbers(values.fullname))) {
-                console.log("invalid")
+                setError(current => ({ ...current, fullname: "Invalid fullname" }))
                 setFirst(current => ({ ...current, check1: false }))
 
             } else if (values.fullname.length <= 3) {
-                console.log("username too short")
+                setError(current => ({ ...current, fullname: "Too short" }))
                 setFirst(current => ({ ...current, check1: false }))
 
             } else if (values.fullname.length >= 60) {
-                console.log("username too long")
+                setError(current => ({ ...current, fullname: "Too long" }))
                 setFirst(current => ({ ...current, check1: false }))
 
             } else {
+                setError(current => ({ ...current, fullname: '' }))
                 setFirst(current => ({ ...current, check1: true }))
             }
 
             if (values.username === '') {
-                console.log("username cannot be empty")
+                setError(current => ({ ...current, username: "Cannot be empty" }))
                 setFirst(current => ({ ...current, check2: false }))
             }
             else if (checkSpecialChar(values.username)) {
-                console.log("username cannot contain special char")
+                setError(current => ({ ...current, username: "Cannot contain special characters" }))
                 setFirst(current => ({ ...current, check2: false }))
             } else if (!(usernameLength(values.username))) {
-                console.log("must be 3 to 10 chars")
+                setError(current => ({ ...current, username: "Must be 3 to 10 characters" }))
                 setFirst(current => ({ ...current, check2: false }))
 
             } else if (hasSpace(values.username)) {
-                console.log("username cannot contain white space")
+                setError(current => ({ ...current, username: "Cannot contain white space" }))
                 setFirst(current => ({ ...current, check2: false }))
 
             } else if (!(hasLetter(values.username))) {
-                console.log("must have atleast 1 letter")
+                setError(current => ({ ...current, username: "Must have atleast 1 letter" }))
                 setFirst(current => ({ ...current, check2: false }))
 
             } else {
+                setError(current => ({ ...current, username: '' }))
                 setFirst(current => ({ ...current, check2: true }))
             }
 
             if (values.email === '') {
-
-                console.log("Email cannot be empty")
+                setError(current => ({ ...current, email: 'Cannot be empty' }))
                 setFirst(current => ({ ...current, check3: false }))
             } else if (validateEmail(values.email)) {
-
+                setError(current => ({ ...current, email: '' }))
                 setFirst(current => ({ ...current, check3: true }))
             } else {
-                console.log("inValid email")
-
+                setError(current => ({ ...current, email: 'Invalid email' }))
                 setFirst(current => ({ ...current, check3: false }))
             }
 
@@ -203,93 +217,95 @@ function Signup(props) {
 
         } else if (page === 2) {
             if (values.facebook.length > 60) {
-                console.log("facebook link is too long")
+                setError(current => ({ ...current, facebook: 'Link too lengthy' }))
                 setSecond(current => ({ ...current, check1: false }))
 
             } else {
                 setSecond(current => ({ ...current, check1: true }))
+                setError(current => ({ ...current, facebook: '' }))
+
             }
 
             if (values.phone === '') {
-                console.log("phone cannot be empty")
+                setError(current => ({ ...current, phone: 'Cannot be empty' }))
                 setSecond(current => ({ ...current, check2: false }))
 
             } else if (!(validPhone(values.phone))) {
-                console.log("Invalid phone number")
+                setError(current => ({ ...current, phone: 'Invalid phone number' }))
                 setSecond(current => ({ ...current, check2: false }))
 
             } else if (values.phone.slice(0, 2) !== '09') {
-                console.log("Must start with 09")
+                setError(current => ({ ...current, phone: 'Must start with 09' }))
                 setSecond(current => ({ ...current, check2: false }))
 
             } else {
+                setError(current => ({ ...current, phone: '' }))
                 setSecond(current => ({ ...current, check2: true }))
             }
 
             if (values.studentno === '') {
-                console.log("student no cannot be empty")
+                setError(current => ({ ...current, studentno: 'Cannot be empty' }))
                 setSecond(current => ({ ...current, check3: false }))
 
             } else if (!(validStudentno(values.studentno))) {
+                setError(current => ({ ...current, studentno: 'Invalid Student Number' }))
                 setSecond(current => ({ ...current, check3: false }))
-                console.log("Invalid student no")
             } else {
                 setSecond(current => ({ ...current, check3: true }))
+                setError(current => ({ ...current, studentno: '' }))
             }
 
             set2go(current => !current)
-        } else if (page === 3){
+        } else if (page === 3) {
 
             if (values.course === '') {
-                console.log("cannot be empty")
+                setError(current => ({ ...current, course: 'Invalid' }))
                 setThird(current => ({ ...current, check1: false }))
             } else if (!(validCourse(values.course))) {
                 setThird(current => ({ ...current, check1: false }))
-                console.log("invalid course")
+                setError(current => ({ ...current, course: 'Invalid' }))
             } else {
                 setThird(current => ({ ...current, check1: true }))
+                setError(current => ({ ...current, course: '' }))
             }
 
             if (values.yearsection === '') {
-                console.log("cannot be empty")
                 setThird(current => ({ ...current, check2: false }))
+                setError(current => ({ ...current, yearsection: 'Invalid' }))
+
             } else if (!(validSection(values.yearsection))) {
-                console.log("invalid section")
                 setThird(current => ({ ...current, check2: false }))
+                setError(current => ({ ...current, yearsection: 'Invalid' }))
 
             } else {
-                setThird(current => ({ ...current, check2: false }))
+                setThird(current => ({ ...current, check2: true }))
+                setError(current => ({ ...current, yearsection: '' }))
 
             }
 
             if (values.password === '') {
-                console.log("cannot be empty")
+                setError(current => ({ ...current, password: 'Cannot be empty' }))
                 setThird(current => ({ ...current, check3: false }))
 
             } else if (values.password.length <= 3) {
                 setThird(current => ({ ...current, check3: false }))
-
-                console.log("password is too weak")
+                setError(current => ({ ...current, password: 'Too weak' }))
             } else if (values.password.length > 15) {
                 setThird(current => ({ ...current, check3: false }))
-
-                console.log("Password is too long")
+                setError(current => ({ ...current, password: 'Too long' }))
             } else {
                 setThird(current => ({ ...current, check3: true }))
-
+                setError(current => ({ ...current, password: '' }))
             }
-
             if (values.confirmpassword === '') {
                 setThird(current => ({ ...current, check4: false }))
-                console.log(" cannot be empty")
-
+                setError(current => ({ ...current, confirmpassword: 'Cannot be empty' }))
             }
             else if (values.confirmpassword.localeCompare(values.password) !== 0) {
-                console.log("Password doesnt match")
                 setThird(current => ({ ...current, check4: false }))
-
+                setError(current => ({ ...current, confirmpassword: 'Does not match' }))
             } else {
-                console.log("does match")
+                setError(current => ({ ...current, confirmpassword: '' }))
                 setThird(current => ({ ...current, check4: true }))
 
             }
@@ -411,14 +427,13 @@ function Signup(props) {
                                 </div>
                             </div>
                             <p className="text-sm text-center text-greenSteps font-medium mt-4">Student Information</p>
-                            {page === 1 ? <Page1 inputs={props.inputs} onChange={handleChange} value={values} /> :
-                                page === 2 ? <Page2 inputs={props.page2inputs} onChange={handleChange} value={values} /> :
-                                    page === 3 ? <Page3 inputsFull={props.page3full} inputsHalf={props.page3half} onChange={handleChange} value={values} /> : null}
+                            {page === 1 ? <Page1 inputs={props.inputs} onChange={handleChange} value={values} error={valuesError} /> :
+                                page === 2 ? <Page2 inputs={props.page2inputs} onChange={handleChange} value={values} error={valuesError} /> :
+                                    page === 3 ? <Page3 inputsFull={props.page3full} inputsHalf={props.page3half} onChange={handleChange} value={values} error={valuesError} /> : null}
 
                             {page === 3 ?
                                 <div className="flex gap-x-4 mt-6">
-                                    <input type="checkbox" className="mb-auto mt-2 ml-1"></input>
-                                    <p className="text-xs">By signing up, you agree to our TOS and Privacy Policy.</p>
+                                    <p className="text-xs ml-1">By signing up, you agree to our<span className="text-[#2165B7] font-semibold cursor-pointer"> TOS and Privacy Policy.</span></p>
                                 </div>
                                 : null}
 
