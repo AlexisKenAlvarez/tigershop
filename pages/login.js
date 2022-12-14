@@ -5,6 +5,7 @@ import LongButton from "../components/LongButton"
 import { useRouter } from "next/router"
 import AuthNavMobile from "../components/AuthNavMobile"
 import AuthSide from "../components/AuthSide"
+import FormInputLogin from "../components/FormInputLogin"
 
 export async function getServerSideProps() {
     
@@ -64,7 +65,7 @@ function Login(props) {
                             <h1 className="uppercase text-2xl font-bold italic w-52 text-center mx-auto mt-16 text-greenBg text-shadow-md mb-10 lg:text-left lg:mx-0 ">Welcome back, Tigers!</h1>
                             {props.inputs.map((value) => {
                                 return (
-                                    <FormInput key={value.id} {...value} />
+                                    <FormInputLogin  key={value.id} {...value} />
                                 )
                             })}
 
