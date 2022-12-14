@@ -59,27 +59,27 @@ export async function getServerSideProps() {
             id: 1,
             name: 'course',
             label: 'course',
-            text: 'text'
+            type: 'text'
         }, {
             id: 2,
             name: 'yearsection',
             label: 'Year and Section',
-            text: 'text'
+            type: 'text'
         },
     ]
 
     const page3full = [
         {
-            id: 1,
+            id: 'password1id',
             name: 'password',
             label: 'password',
-            text: 'password'
+            type: 'password'
         },
         {
-            id: 2,
+            id: 'password12d',
             name: 'confirmpassword',
             label: 'confirm password',
-            text: 'password'
+            type: 'password'
         },
     ]
 
@@ -113,6 +113,19 @@ function Signup(props) {
         check3: false
     })
 
+    const [secondCheck, setSecond] = useState({
+        check1: false,
+        check2: false,
+        check3: false
+    })
+
+    const [thirdheck, setThird] = useState({
+        check1: false,
+        check2: false,
+        check3: false,
+        check4: false
+    })
+
     const [page1go, set1go] = useState(false)
     const [page2go, set2go] = useState(false)
     const [page3go, set3go] = useState(false)
@@ -127,80 +140,180 @@ function Signup(props) {
     }
 
     const handleNextPage = () => {
-        if (page < 3) {
-            if (page === 1) {
 
-                if (values.fullname === '') {
-                    console.log("fullname cannot be empty")
-                    setFirst(current => ({ ...current, check1: false }))
+        if (page === 1) {
 
-                } else if (!(onlyLettersAndNumbers(values.fullname))) {
-                    console.log("invalid")
-                    setFirst(current => ({ ...current, check1: false }))
+            if (values.fullname === '') {
+                console.log("fullname cannot be empty")
+                setFirst(current => ({ ...current, check1: false }))
 
-                } else if (values.fullname.length <= 3) {
-                    console.log("username too short")
-                    setFirst(current => ({ ...current, check1: false }))
+            } else if (!(onlyLettersAndNumbers(values.fullname))) {
+                console.log("invalid")
+                setFirst(current => ({ ...current, check1: false }))
 
-                } else if (values.fullname.length >= 60) {
-                    console.log("username too long")
-                    setFirst(current => ({ ...current, check1: false }))
+            } else if (values.fullname.length <= 3) {
+                console.log("username too short")
+                setFirst(current => ({ ...current, check1: false }))
 
-                } else {
-                    setFirst(current => ({ ...current, check1: true }))
-                }
+            } else if (values.fullname.length >= 60) {
+                console.log("username too long")
+                setFirst(current => ({ ...current, check1: false }))
 
-                if (values.username === '') {
-                    console.log("username cannot be empty")
-                    setFirst(current => ({ ...current, check2: false }))
-                }
-                else if (checkSpecialChar(values.username)) {
-                    console.log("username cannot contain special char")
-                    setFirst(current => ({ ...current, check2: false }))
-                } else if (!(usernameLength(values.username))) {
-                    console.log("must be 3 to 10 chars")
-                    setFirst(current => ({ ...current, check2: false }))
+            } else {
+                setFirst(current => ({ ...current, check1: true }))
+            }
 
-                } else if (hasSpace(values.username)) {
-                    console.log("username cannot contain white space")
-                    setFirst(current => ({ ...current, check2: false }))
+            if (values.username === '') {
+                console.log("username cannot be empty")
+                setFirst(current => ({ ...current, check2: false }))
+            }
+            else if (checkSpecialChar(values.username)) {
+                console.log("username cannot contain special char")
+                setFirst(current => ({ ...current, check2: false }))
+            } else if (!(usernameLength(values.username))) {
+                console.log("must be 3 to 10 chars")
+                setFirst(current => ({ ...current, check2: false }))
 
-                } else if (!(hasLetter(values.username))) {
-                    console.log("must have atleast 1 letter")
-                    setFirst(current => ({ ...current, check2: false }))
+            } else if (hasSpace(values.username)) {
+                console.log("username cannot contain white space")
+                setFirst(current => ({ ...current, check2: false }))
 
-                } else {
-                    setFirst(current => ({ ...current, check2: true }))
-                }
+            } else if (!(hasLetter(values.username))) {
+                console.log("must have atleast 1 letter")
+                setFirst(current => ({ ...current, check2: false }))
 
-                if (values.email === '') {
+            } else {
+                setFirst(current => ({ ...current, check2: true }))
+            }
 
-                    console.log("Email cannot be empty")
-                    setFirst(current => ({ ...current, check3: false }))
-                } else if (validateEmail(values.email)) {
+            if (values.email === '') {
 
-                    setFirst(current => ({ ...current, check3: true }))
-                } else {
-                    console.log("inValid email")
+                console.log("Email cannot be empty")
+                setFirst(current => ({ ...current, check3: false }))
+            } else if (validateEmail(values.email)) {
 
-                    setFirst(current => ({ ...current, check3: false }))
-                }
+                setFirst(current => ({ ...current, check3: true }))
+            } else {
+                console.log("inValid email")
 
-                set1go(current => !current)
+                setFirst(current => ({ ...current, check3: false }))
+            }
 
-            } else if (page === 2) {
-                
+            set1go(current => !current)
+
+        } else if (page === 2) {
+            if (values.facebook.length > 60) {
+                console.log("facebook link is too long")
+                setSecond(current => ({ ...current, check1: false }))
+
+            } else {
+                setSecond(current => ({ ...current, check1: true }))
+            }
+
+            if (values.phone === '') {
+                console.log("phone cannot be empty")
+                setSecond(current => ({ ...current, check2: false }))
+
+            } else if (!(validPhone(values.phone))) {
+                console.log("Invalid phone number")
+                setSecond(current => ({ ...current, check2: false }))
+
+            } else if (values.phone.slice(0, 2) !== '09') {
+                console.log("Must start with 09")
+                setSecond(current => ({ ...current, check2: false }))
+
+            } else {
+                setSecond(current => ({ ...current, check2: true }))
+            }
+
+            if (values.studentno === '') {
+                console.log("student no cannot be empty")
+                setSecond(current => ({ ...current, check3: false }))
+
+            } else if (!(validStudentno(values.studentno))) {
+                setSecond(current => ({ ...current, check3: false }))
+                console.log("Invalid student no")
+            } else {
+                setSecond(current => ({ ...current, check3: true }))
+            }
+
+            set2go(current => !current)
+        } else if (page === 3){
+
+            if (values.course === '') {
+                console.log("cannot be empty")
+                setThird(current => ({ ...current, check1: false }))
+            } else if (!(validCourse(values.course))) {
+                setThird(current => ({ ...current, check1: false }))
+                console.log("invalid course")
+            } else {
+                setThird(current => ({ ...current, check1: true }))
+            }
+
+            if (values.yearsection === '') {
+                console.log("cannot be empty")
+                setThird(current => ({ ...current, check2: false }))
+            } else if (!(validSection(values.yearsection))) {
+                console.log("invalid section")
+                setThird(current => ({ ...current, check2: false }))
+
+            } else {
+                setThird(current => ({ ...current, check2: false }))
+
+            }
+
+            if (values.password === '') {
+                console.log("cannot be empty")
+                setThird(current => ({ ...current, check3: false }))
+
+            } else if (values.password.length <= 3) {
+                setThird(current => ({ ...current, check3: false }))
+
+                console.log("password is too weak")
+            } else if (values.password.length > 15) {
+                setThird(current => ({ ...current, check3: false }))
+
+                console.log("Password is too long")
+            } else {
+                setThird(current => ({ ...current, check3: true }))
+
+            }
+
+            if (values.confirmpassword === '') {
+                setThird(current => ({ ...current, check4: false }))
+                console.log(" cannot be empty")
+
+            }
+            else if (values.confirmpassword.localeCompare(values.password) !== 0) {
+                console.log("Password doesnt match")
+                setThird(current => ({ ...current, check4: false }))
+
+            } else {
+                console.log("does match")
+                setThird(current => ({ ...current, check4: true }))
+
             }
         }
+
     }
 
     useEffect(() => {
         if (firstCheck.check1 && firstCheck.check2 && firstCheck.check3) {
             nextPage()
+
         }
     }, [page1go])
 
-    
+    useEffect(() => {
+        if (secondCheck.check1 && secondCheck.check2 && secondCheck.check3) {
+            nextPage()
+
+        }
+
+    }, [page2go])
+
+
+
 
 
     const handleBackPage = () => {
@@ -239,12 +352,28 @@ function Signup(props) {
         return /^[a-zA-Z0-9\s]{3,10}$/.test(str)
     }
 
+    function validSection(str) {
+        return /^[a-zA-Z0-9-_]{3,3}$/.test(str)
+    }
+
     function hasLetter(str) {
         return /[a-zA-Z]+/.test(str)
     }
 
+    function validCourse(str) {
+        return /[a-zA-Z\s]+/.test(str)
+    }
+
     function onlyLettersAndNumbers(str) {
         return /^[A-Za-z]*$/.test(str);
+    }
+
+    function validPhone(str) {
+        return /^[0-9]{11,11}$/.test(str);
+    }
+
+    function validStudentno(str) {
+        return /^[0-9]{9,9}$/.test(str);
     }
 
     const nextPage = () => {
@@ -261,7 +390,7 @@ function Signup(props) {
 
                 <div className="bg-white h-screen w-full fixed top-0 z-[-1] lg:hidden"></div>
 
-                <div className="bg-white h-screen w-full p-0 mt-0 lg:h-[90%] lg:min-h-[550px] lg:max-h-[650px] lg:w-[90%] lg:max-w-[1000px] lg:flex mx-auto lg:rounded-3xl" style={page === 3 ? { minHeight: '670px', maxHeight: '700px' } : {}}>
+                <div className="bg-white h-screen w-full p-0 mt-0 lg:h-[90%] lg:min-h-[580px] lg:max-h-[650px] lg:w-[90%] lg:max-w-[1000px] lg:flex mx-auto lg:rounded-3xl">
                     <AuthNavMobile text="login" onClick={navigateLogin} />
 
                     <div className="w-full">
@@ -289,13 +418,14 @@ function Signup(props) {
                             {page === 3 ?
                                 <div className="flex gap-x-4 mt-6">
                                     <input type="checkbox" className="mb-auto mt-2 ml-1"></input>
-                                    <p className="text-xs">I agree that all of the information I have provided are correct and I consent the page to use that information for my future transactions within the page.</p>
+                                    <p className="text-xs">By signing up, you agree to our TOS and Privacy Policy.</p>
                                 </div>
                                 : null}
 
                             <div className="flex">
                                 {page === 2 ? <ShortButton name="Back" className="mr-auto" onClick={handleBackPage} /> : null}
-                                {page < 3 ? <ShortButton name="Next" className="ml-auto" onClick={handleNextPage} /> : <LongButton name="Create my account" />}
+                                {page < 3 ? <ShortButton name="Next" className="ml-auto" onClick={handleNextPage} /> :
+                                    <LongButton name="Create my account" onClick={handleNextPage} />}
                             </div>
 
                         </div>
