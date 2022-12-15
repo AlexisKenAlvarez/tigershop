@@ -11,10 +11,31 @@ import LongButton from "../components/LongButton"
 import { createUserWithEmailAndPassword, sendSignInLinkToEmail } from "firebase/auth"
 import { collection, setDoc, doc } from "firebase/firestore"
 import { verify } from "jsonwebtoken"
-import { auth, database } from "../components/firebase/firebase-config"
+import { auth, database, actionCodeSettings } from "../components/firebase/firebase-config"
 
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+    const secret = process.env.NEXT_PUBLIC_SECRET
+    const jwt = context.req.cookies['authToken']
+  
+    const url = context.req.url
+  
+    if (url.includes('/signup')) {
+  
+      try {
+        verify(jwt, secret);
+        return {
+          redirect: {
+            destination: '/',
+            permanent: false
+          }
+        }
+  
+      } catch (error) {
+        console.log(error)
+      
+      }
+    }
 
     const inputs = [
         {
@@ -334,10 +355,50 @@ function Signup(props) {
     }, [page2go])
 
     useEffect(() => {
-        if(thirdCheck.check1 && thirdCheck.check2 && thirdCheck.check3) {
-            
+        if (thirdCheck.check1 && thirdCheck.check2 && thirdCheck.check3) {
+            register()
         }
-    }, [])
+    }, [page3go])
+
+    const register = async () => {
+        sendSignInLinkToEmail(auth, values.email, actionCodeSettings)
+            .then(() => {
+                console.log("Email link sent")
+                // The link was successfully sent. Inform the user.
+                // Save the email locally so you don't need to ask the user for it again
+                // if they open the link on the same device.
+                window.localStorage.setItem('emailForSignIn', values.email);
+                // ...
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+                console.log(errorMessage)
+            });
+        try {
+            const user = await createUserWithEmailAndPassword(auth, values.email, values.password)
+
+            await setDoc(doc(database, "users", user._tokenResponse.localId), {
+                username: values.username,
+                email: values.email,
+                fullname: values.fullname,
+                phone: values.phone,
+                facebook: values.facebook,
+                studentno: +values.studentno,
+                course: values.course,
+                yearsection: values.yearsection,
+            }).then(() => {
+                console.log("Added user credentials")
+                router.push("/temp")
+            }).catch((err) => {
+                console.log(err)
+            })
+
+
+            console.log(user)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
 
