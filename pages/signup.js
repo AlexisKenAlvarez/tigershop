@@ -8,6 +8,10 @@ import Page1 from "../components/register/Page1"
 import Page2 from "../components/register/Page2"
 import Page3 from "../components/register/Page3"
 import LongButton from "../components/LongButton"
+import { createUserWithEmailAndPassword, sendSignInLinkToEmail } from "firebase/auth"
+import { collection, setDoc, doc } from "firebase/firestore"
+import { verify } from "jsonwebtoken"
+import { auth, database } from "../components/firebase/firebase-config"
 
 
 export async function getServerSideProps() {
@@ -133,7 +137,7 @@ function Signup(props) {
         check3: false
     })
 
-    const [thirdheck, setThird] = useState({
+    const [thirdCheck, setThird] = useState({
         check1: false,
         check2: false,
         check3: false,
@@ -307,8 +311,9 @@ function Signup(props) {
             } else {
                 setError(current => ({ ...current, confirmpassword: '' }))
                 setThird(current => ({ ...current, check4: true }))
-
             }
+
+            set3go(current => !current)
         }
 
     }
@@ -328,7 +333,11 @@ function Signup(props) {
 
     }, [page2go])
 
-
+    useEffect(() => {
+        if(thirdCheck.check1 && thirdCheck.check2 && thirdCheck.check3) {
+            
+        }
+    }, [])
 
 
 
@@ -406,7 +415,7 @@ function Signup(props) {
 
                 <div className="bg-white h-screen w-full fixed top-0 z-[-1] lg:hidden"></div>
 
-                <div className="bg-white h-screen w-full p-0 mt-0 lg:h-[90%] lg:min-h-[580px] lg:max-h-[650px] lg:w-[90%] lg:max-w-[1000px] lg:flex mx-auto lg:rounded-3xl">
+                <div className="bg-white h-screen w-full p-0 mt-0 lg:h-[90%] lg:min-h-[620px] lg:max-h-[650px] lg:w-[90%] lg:max-w-[1000px] lg:flex mx-auto lg:rounded-3xl">
                     <AuthNavMobile text="login" onClick={navigateLogin} />
 
                     <div className="w-full">
