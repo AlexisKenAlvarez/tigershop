@@ -381,7 +381,7 @@ function Signup(props) {
     }
 
     function onlyLettersAndNumbers(str) {
-        return /^[A-Za-z]*$/.test(str);
+        return /^[A-Za-z\s.,]*$/.test(str);
     }
 
     function validPhone(str) {
